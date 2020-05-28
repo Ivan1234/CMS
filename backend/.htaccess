@@ -1,0 +1,8 @@
+
+Options All -Indexes
+
+# Url Amigables
+
+RewriteEngine on
+
+RewriteRule ^([a-zA-Z0-9]+)$ index.php?action=$1
