@@ -80,12 +80,15 @@ $("#columnasSlide").on("drop",function(e){
 			cache: false,
 			contentType: false,
 			processData: false,
+			dataType: "json",
 			beforeSend: function(){
 
 				$("#columnasSlide").before('<img src="views/images/status.gif" id="status">');
 
 			},
 			success: function(respuesta){
+
+				$("#status").remove();
 
 				if(respuesta == 0){
 
@@ -95,9 +98,9 @@ $("#columnasSlide").on("drop",function(e){
 				}
 				else{
 
-					console.log(respuesta);
+					$("#columnasSlide").css({"height":"auto"});
 
-					$("#columnasSlide").append('<li class="bloqueSlide"><span class="fa fa-times"></span><img src="" class="handleImg"></li>');
+					$("#columnasSlide").append('<li class="bloqueSlide"><span class="fa fa-times"></span><img src="'+respuesta["ruta"].slice(6)+'" class="handleImg"></li>');
 
 				}
 
