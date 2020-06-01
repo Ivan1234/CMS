@@ -1,42 +1,65 @@
 <?php 
 
-	require_once "conexion.php";
+require_once "conexion.php";
 
-	class gestorSlideModelo{
+class gestorSlideModelo{
 
-		function subirImagenSlideModelo($datosModelo, $tabla){
 
-			$stmt=conexion::conectar()->prepare("INSERT INTO $tabla(ruta) VALUES (:ruta)");
+	//SUBIR RUTA DE LA IMAGEN
+	//--------------------------------------------------------------------------------------------------
 
-			$stmt -> bindParam(":ruta", $datosModelo, PDO::PARAM_STR);
+	function subirImagenSlideModelo($datosModelo, $tabla){
 
-			if($stmt -> execute()){
+		$stmt=conexion::conectar()->prepare("INSERT INTO $tabla(ruta) VALUES (:ruta)");
 
-				return "ok";
+		$stmt -> bindParam(":ruta", $datosModelo, PDO::PARAM_STR);
 
-			}
-			else{
+		if($stmt -> execute()){
 
-				return "error";
+			return "ok";
 
-			}
+		}
+		else{
 
-			$stmt -> close();
+			return "error";
 
 		}
 
-		function mostrarImagenSlideModelo($datosModelo, $tabla){
+		$stmt -> close();
 
-			$stmt=conexion::conectar()->prepare("SELECT ruta FROM $tabla WHERE ruta = :ruta");
-
-			$stmt -> bindParam(":ruta", $datosModelo, PDO::PARAM_STR);
-
-			$stmt -> execute();
-
-			return $stmt -> fetch();
-
-			$stmt -> close();
-
-		}
-		
 	}
+
+
+	//MOSTRAR RUTA DE LA IMAGEN
+	//--------------------------------------------------------------------------------------------------
+
+	function mostrarImagenSlideModelo($datosModelo, $tabla){
+
+		$stmt=conexion::conectar()->prepare("SELECT ruta FROM $tabla WHERE ruta = :ruta");
+
+		$stmt -> bindParam(":ruta", $datosModelo, PDO::PARAM_STR);
+
+		$stmt -> execute();
+
+		return $stmt -> fetch();
+
+		$stmt -> close();
+
+	}
+
+	//MOSTRAR IMAGENES EN LA VISTA
+	//----------------------------------------------------------------------------------------------------
+
+	function mostrarImagenVistaModelo($tabla){
+		
+		$stmt=conexion::conectar()->prepare("SELECT ruta, titulo, descripcion FROM $tabla ORDER BY orden ASC");
+
+		$stmt -> execute();
+
+		return $stmt -> fetchAll();
+
+		$stmt -> close();		
+
+	}
+
+}

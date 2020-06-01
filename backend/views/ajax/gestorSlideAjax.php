@@ -3,7 +3,13 @@
 	require_once "../../controllers/gestorSlideControlador.php";
 	require_once "../../models/gestorSlideModelo.php";
 
+	//CLASE Y MÉTODOS
+	//------------------------------------------------------------------------------
+
 	class gestorSlideAjax{
+
+		//SUBIR LA IMAGEN DEL SLIDE
+		//--------------------------------------------------------------------------
 
 		public $imagenNombre;
 		public $imagenTemporal;		
@@ -24,6 +30,9 @@
 		}
 		
 	}
+
+	//OBJETOS
+	//------------------------------------------------------------------------------
 
 	$a = new gestorSlideAjax();
 	$a -> imagenNombre=$_FILES["imagen"]["name"];
