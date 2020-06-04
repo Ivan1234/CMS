@@ -28,15 +28,23 @@ class gestorSlideControlador{
 
 			$origen = imagecreatefromjpeg($datosControlador["imagenTemporal"]);
 
+			//imagecrop -> Recorta la imagen usando coordenadas x y y ademas del ancho y altos dados
+
+			$destino = imagecrop($origen, ["x" => 0, "y"=>0, "width"=>1600, "height"=>600]);
+
 			//imagejpeg -> exporta la imagen al navegador o un fichero
 
-			imagejpeg($origen, $ruta);
+			imagejpeg($destino, $ruta);
 
 			GestorSlideModelo::subirImagenSlideModelo($ruta, "slide");
 
 			$respuesta = GestorSlideModelo::mostrarImagenSlideModelo($ruta, "slide");
 
-			$enviarDatos = array("ruta" => $respuesta["ruta"]);
+			$enviarDatos = array(
+				"ruta" => $respuesta["ruta"],
+				"titulo" => $respuesta["titulo"],
+				"descripcion" => $respuesta["descripcion"]
+			);
 
 			echo json_encode($enviarDatos);
 
@@ -53,7 +61,7 @@ class gestorSlideControlador{
 
 		foreach($respuesta as $row => $item){
 
-			echo '<li class="bloqueSlide"><span class="fa fa-times"></span><img src="'.substr($item["ruta"], 6).'" class="handleImg"></li>';
+			echo '<li id="'.$item["id"].'" class="bloqueSlide"><span class="fa fa-times eliminarSlide" ruta="'.$item["ruta"].'"></span><img src="'.substr($item["ruta"], 6).'" class="handleImg"></li>';
 
 		}
 
@@ -67,8 +75,8 @@ class gestorSlideControlador{
 
   		foreach($respuesta as $row => $item){
 
-			echo '<li>
-					<span class="fa fa-pencil" style="background:blue"></span>
+			echo '<li id="item'.$item["id"].'">
+					<span class="fa fa-pencil editarSlide" style="background:blue"></span>
 					<img src="'.substr($item["ruta"], 6).'" style="float:left; margin-bottom:10px" width="80%">
 					<h1>'.$item["titulo"].'</h1>
 					<p>'.$item["descripcion"].'</p>
@@ -78,4 +86,15 @@ class gestorSlideControlador{
 
 	}
 
+	//ELIMINAR ITEM DEL SLIDE
+	//-----------------------------------------------------------------------------------------
+	function eliminarSlideControlador($datosControlador){
+
+		GestorSlideModelo::eliminarSlideModelo($datosControlador,"slide");
+
+		unlink($datosControlador["rutaSlide"]);
+
+	}
+
 }
+

@@ -100,9 +100,29 @@ $("#columnasSlide").on("drop",function(e){
 
 					$("#columnasSlide").css({"height":"auto"});
 
-					$("#columnasSlide").append('<li class="bloqueSlide"><span class="fa fa-times"></span><img src="'+respuesta["ruta"].slice(6)+'" class="handleImg"></li>');
+					$("#columnasSlide").append('<li class="bloqueSlide"><span class="fa fa-times eliminarSlide"></span><img src="'+respuesta["ruta"].slice(6)+'" class="handleImg"></li>');
 
 					$("#ordenarTextSlide").append('<li><span class="fa fa-pencil" style="background:blue"></span><img src="'+respuesta["ruta"].slice(6)+'" style="float:left; margin-bottom:10px" width="80%"><h1>'+respuesta["titulo"]+'</h1><p>'+respuesta["descripcion"]+'</p></li>');
+
+					//window.location.reload();
+
+					swal({
+
+						title: "¡OK!",
+						text: "¡La imagen se subió correctamente!",
+						type: "success",
+						confirmButtonText: "Cerrar",
+						closeOnConfirm: false
+					},
+					function(isConfirm){
+
+						if(isConfirm){
+
+							window.location = "slide";	
+
+						}
+
+					});
 
 				}
 
@@ -115,3 +135,90 @@ $("#columnasSlide").on("drop",function(e){
 });
 
 //Fin de Área de subir imágenes//
+
+//Eliminar Item Slide
+
+$(".eliminarSlide").click(function(){
+
+	if($(".eliminarSlide").length == 1){
+
+		$("#columnasSlide").css({"height":"100px"});
+
+	}
+
+	idSlide	= $(this).parent().attr("id");
+	$(this).parent().remove();
+
+	rutaSlide = $(this).attr("ruta");
+	$("#item"+idSlide).remove();
+
+	var borrarItem = new FormData();
+	borrarItem.append("idSlide", idSlide);
+	borrarItem.append("rutaSlide", rutaSlide);
+
+	$.ajax({
+
+		url: "views/ajax/gestorSlideAjax.php",
+		method: "POST",
+		data: borrarItem,
+		cache: false,
+		contentType: false,
+		processData: false,
+		success: function(){}
+
+	});
+
+});
+
+//Fin de Eliminar Item Slide
+
+//Editar Item Slide
+
+$(".editarSlide").click(function(){
+
+	idSlide = $(this).parent().attr("id");
+
+	rutaImagen = $(this).parent().children("img").attr("src");
+	rutaTitulo = $(this).parent().children("h1").html();
+	rutaDescripcion = $(this).parent().children("p").html();
+
+	$(this).parent().html('<img src="'+rutaImagen+'" class="img-thumbnail"><input type="text" class="form-control" id="enviarTitulo" placeholder="Título" value="'+rutaTitulo+'"><textarea row="5" class="form-control" id="enviarDescripcion" placeholder="Descripción">'+rutaDescripcion+'</textarea><button class="btn btn-info pull-right" id="guardar'+idSlide+'" style="margin:10px">Guardar</button>');
+
+	$("#guardar"+idSlide).click(function(){
+
+		enviarID = idSlide.slice(4);
+
+		enviarTitulo = $("#enviarTitulo").val();
+
+		enviarDescripcion = $("#enviarDescripcion");
+
+		var actualizarSlide = new FormData();
+
+		actualizarSlide.append("enviarID", enviarID);
+
+		actualizarSlide.append("enviarTitulo", enviarTitulo);
+
+		actualizarSlide.append("enviarDescripcion", enviarDescripcion);
+
+		$.ajax({
+
+			url: "views/ajax/gestorSlideAjax.php",
+			method: "POST",
+			data: actualizarSlide,
+			cache: false,
+			contentType: false,
+			processData: false,
+			dataType: "json",
+			success: function(respuesta){
+
+				console.log("respuesta: ", respuesta);
+
+			}
+
+		});
+
+	});
+
+});
+
+//Fin de Editar Item Slide

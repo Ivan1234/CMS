@@ -35,7 +35,7 @@ class gestorSlideModelo{
 
 	function mostrarImagenSlideModelo($datosModelo, $tabla){
 
-		$stmt=conexion::conectar()->prepare("SELECT ruta FROM $tabla WHERE ruta = :ruta");
+		$stmt=conexion::conectar()->prepare("SELECT ruta, titulo, descripcion FROM $tabla WHERE ruta = :ruta");
 
 		$stmt -> bindParam(":ruta", $datosModelo, PDO::PARAM_STR);
 
@@ -52,13 +52,34 @@ class gestorSlideModelo{
 
 	function mostrarImagenVistaModelo($tabla){
 		
-		$stmt=conexion::conectar()->prepare("SELECT ruta, titulo, descripcion FROM $tabla ORDER BY orden ASC");
+		$stmt=conexion::conectar()->prepare("SELECT id, ruta, titulo, descripcion FROM $tabla ORDER BY orden ASC");
 
 		$stmt -> execute();
 
 		return $stmt -> fetchAll();
 
 		$stmt -> close();		
+
+	}
+
+	function eliminarSlideModelo($datosModelo, $tabla){
+
+		$stmt = conexion::conectar()->prepare("DELETE FROM $tabla WHERE id = :id");
+
+		$stmt -> bindParam(":id", $datosModelo["idSlide"], PDO::PARAM_INT);
+
+		if($stmt -> execute()){
+
+			return "ok";
+
+		}
+		else{
+
+			return "error";
+
+		}
+
+		$stmt -> close();
 
 	}
 
